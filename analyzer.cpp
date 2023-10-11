@@ -1,12 +1,14 @@
-//
-// Created by ryans on 10/11/2023.
-//
+//Author: Ryan Spaker
+//Lab 5
+//Lab Partner: Lucas Salas
+
 #include <iostream>
 #include "StringData.h"
 using std::vector;
 using std::string;
 using std::cout;
 
+//Linearly Searches for element in a list
 int linear_search(vector<string>* container, string element) {
     for(int i = 0; i < container->size(); i++){
         if (container->at(i) == element){
@@ -15,7 +17,7 @@ int linear_search(vector<string>* container, string element) {
     }
     return -1;
 }
-
+// Searches for an element using binary search, returns -1 if not found
 int binary_search(vector<string>* container, string element) {
     int upper_bound = container->size();
     int lower_bound = -1;
@@ -37,7 +39,7 @@ int binary_search(vector<string>* container, string element) {
         }
     }
 }
-
+//Main logic
 int main(){
     vector<string> data = getStringData();
     long long t1 = systemTimeNanoseconds();
