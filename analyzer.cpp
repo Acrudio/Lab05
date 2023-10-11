@@ -1,78 +1,70 @@
-//
-// Created by acrud on 10/11/2023.
-//
-// Partner is Ryan Spaker
+//Author: Ryan Spaker
+//Lab 5
+//Lab Partner: Lucas Salas
 
 #include <iostream>
 #include "StringData.h"
-#include <vector>
-#include <string>
-#include <algorithm>
+using std::vector;
+using std::string;
+using std::cout;
 
-using namespace std;
-
-// Linear Search
-int LinearSearch(vector<string> container, string element){
-    long long time_start = systemTimeNanoseconds(); // start time
-    int found_index = -1;
-
-    // Search
-    for (int i = 0; i < container.size(); i++){
-        if(container.at(i) == element){
-            found_index = i;
-            break;
+//Linearly Searches for element in a list
+int linear_search(vector<string>* container, string element) {
+    for(int i = 0; i < container->size(); i++){
+        if (container->at(i) == element){
+            return i;
         }
     }
-
-    long long timeTaken = systemTimeNanoseconds() - time_start;// record time
-    cout << "Linear Search of \"" << element << "\" took " << timeTaken << " nanoseconds ";
-
-    return found_index;
+    return -1;
 }
-
-// Binary Search
-int BinarySearch(vector<string> container, string element){
-    long long timeStart = systemTimeNanoseconds(); // start time
-    int found_index = -1;
-
-    sort(container.begin(), container.end());
-
-    int botBound = 0;
-    int topBound = int(container.size()) - 1;
-    int i = 0;
-
-    while (topBound - botBound >= 0){
-        i = (topBound + botBound) / 2;
-
-        if (container.at(i) == element){
-            found_index = i;
-            break;
+// Searches for an element using binary search, returns -1 if not found
+int binary_search(vector<string>* container, string element) {
+    int upper_bound = container->size();
+    int lower_bound = -1;
+    int current_pos = (upper_bound + lower_bound) / 2;
+    while (true){
+        if (container->at(current_pos) == element){
+            return current_pos;
         }
-        // if element in upper half
-        else if (element > container.at(i)){
-            botBound = i + 1;
+        if (container->at(current_pos) > element){
+            upper_bound = current_pos;
+            current_pos = (upper_bound + lower_bound)/2;
         }
-        // if element in lower half
-        else {
-            topBound = i - 1;
+        if (container->at(current_pos) < element){
+            lower_bound = current_pos;
+            current_pos = (upper_bound + lower_bound)/2;
+        }
+        if (upper_bound-lower_bound < 2) {
+            return -1;
         }
     }
-
-    int timeTaken = systemTimeNanoseconds() - timeStart; // record time
-    cout << "Binary Search of \"" << element << "\" took " << timeTaken << " nanoseconds " ;
-    return found_index;
 }
-
+//Main logic
 int main(){
     vector<string> data = getStringData();
-    cout << "Start\n\n";
-
-    cout << BinarySearch(data, "not_here") << "\n";
-    cout << LinearSearch(data, "not_here") << "\n";
-    cout << BinarySearch(data, "mzzzz") << "\n";
-    cout << LinearSearch(data, "mzzzz") << "\n";
-    cout << BinarySearch(data, "aaaaa") << "\n";
-    cout << LinearSearch(data, "aaaaa") << "\n";
-
+    long long t1 = systemTimeNanoseconds();
+    int response = linear_search(&data, string("not_here"));
+    long long t2 = systemTimeNanoseconds();
+    cout << "Linear search for not_here returned: " << response << ", and took: " << (t2-t1) << " Nanoseconds\n";
+    t1 = systemTimeNanoseconds();
+    response = binary_search(&data, string("not_here"));
+    t2 = systemTimeNanoseconds();
+    cout << "Binary search for not_here returned: " << response << ", and took: " << (t2-t1) << " Nanoseconds\n";
+    t1 = systemTimeNanoseconds();
+    response = linear_search(&data, string("mzzzz"));
+    t2 = systemTimeNanoseconds();
+    cout << "Linear search for mzzzz returned: " << response << ", and took: " << (t2-t1) << " Nanoseconds\n";
+    t1 = systemTimeNanoseconds();
+    response = binary_search(&data, string("mzzzz"));
+    t2 = systemTimeNanoseconds();
+    cout << "Binary search for mzzzz returned: " << response << ", and took: " << (t2-t1) << " Nanoseconds\n";
+    t1 = systemTimeNanoseconds();
+    response = linear_search(&data, string("aaaaa"));
+    t2 = systemTimeNanoseconds();
+    cout << "Linear search for aaaaa returned: " << response << ", and took: " << (t2-t1) << " Nanoseconds\n";
+    t1 = systemTimeNanoseconds();
+    response = binary_search(&data, string("aaaaa"));
+    t2 = systemTimeNanoseconds();
+    cout << "Binary search for aaaaa returned: " << response << ", and took: " << (t2-t1) << " Nanoseconds\n";
     return 0;
 }
